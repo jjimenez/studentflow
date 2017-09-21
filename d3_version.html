@@ -1,0 +1,403 @@
+<html>
+<head>
+  <title>A D3 map</title>
+  <script src='https://d3js.org/d3.v4.min.js'></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+	  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	  crossorigin="anonymous"></script>
+  <style>
+    	svg { 
+          border: 1px solid blue;
+        }
+        .nodes {
+          fill: blue;
+        }
+        #student1 {
+          fill: green;
+          r: 12;
+        }
+        .updated {
+          fill: red;
+        }
+        .control_container {
+          width: 45%;
+        }
+	/* The switch - the box around the slider */
+	.switch {
+	  position: relative;
+	  display: inline-block;
+	  width: 60px;
+	  height: 34px;
+	}
+
+	/* Hide default HTML checkbox */
+	.switch input {display:none;}
+
+	/* The slider */
+	.slider {
+	  position: absolute;
+	  cursor: pointer;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  bottom: 0;
+	  background-color: #ccc;
+	  -webkit-transition: .4s;
+	  transition: .4s;
+	}
+
+	.slider:before {
+	  position: absolute;
+	  content: "";
+	  height: 26px;
+	  width: 26px;
+	  left: 4px;
+	  bottom: 4px;
+	  background-color: white;
+	  -webkit-transition: .4s;
+	  transition: .4s;
+	}
+
+	input:checked + .slider {
+	  background-color: #2196F3;
+	}
+
+	input:focus + .slider {
+	  box-shadow: 0 0 1px #2196F3;
+	}
+
+	input:checked + .slider:before {
+	  -webkit-transform: translateX(26px);
+	  -ms-transform: translateX(26px);
+	  transform: translateX(26px);
+	}
+
+	/* Rounded sliders */
+	.slider.round {
+	  border-radius: 34px;
+	}
+
+	.slider.round:before {
+	  border-radius: 50%;
+	}
+        #dow_label {
+          text-transform: uppercase;
+        }
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+body {
+  font-family: sans-serif;
+  padding: 60px 20px;
+}
+@media (min-width: 600px) {
+  body {
+    padding: 60px;
+  }
+}
+.range-slider {
+  margin: 60px 0 0 0%;
+}
+.range-slider {
+  width: 100%;
+}
+.range-slider__range {
+  -webkit-appearance: none;
+  width: calc(100% - (73px));
+  height: 10px;
+  border-radius: 5px;
+  background: #d7dcdf;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+.range-slider__range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #2c3e50;
+  cursor: pointer;
+  transition: background 0.15s ease-in-out;
+}
+.range-slider__range::-webkit-slider-thumb:hover {
+  background: #1abc9c;
+}
+.range-slider__range:active::-webkit-slider-thumb {
+  background: #1abc9c;
+}
+.range-slider__range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 50%;
+  background: #2c3e50;
+  cursor: pointer;
+  transition: background 0.15s ease-in-out;
+}
+.range-slider__range::-moz-range-thumb:hover {
+  background: #1abc9c;
+}
+.range-slider__range:active::-moz-range-thumb {
+  background: #1abc9c;
+}
+.range-slider__value {
+  display: inline-block;
+  position: relative;
+  width: 60px;
+  color: #fff;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 3px;
+  background: #2c3e50;
+  padding: 5px 10px;
+  margin-left: 8px;
+}
+.range-slider__value:after {
+  position: absolute;
+  top: 8px;
+  left: -7px;
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-right: 7px solid #2c3e50;
+  border-bottom: 7px solid transparent;
+  content: '';
+}
+::-moz-range-track {
+  background: #d7dcdf;
+  border: 0;
+}
+input::-moz-focus-inner, input::-moz-focus-outer {
+  border: 0;
+}
+  </style>
+  <script>
+     var rewound = {};
+     var schedules = {};
+     var albersProjection;
+     var geoPath;
+     var zoom;
+     var svg;
+     var g;
+     var cradius = 1;
+     var cpadding = 2;
+     var circles;
+     var simulation;
+     var current_hour = 10;
+     var current_dow = 'mwf';
+
+	function initMap() {
+		var width = 700,
+		    height = 580;
+
+		albersProjection = d3.geoAlbers()
+		  .scale(1229500)
+		  .rotate([91.5356997, 0])
+		  .center([0, 41.661872])
+		  .translate([width/2, height/2]);
+
+		geoPath = d3.geoPath()
+		    .projection(albersProjection);
+                zoom = d3.zoom()
+                    .scaleExtent([1,8])
+                    .on('zoom',zoomed);
+
+		svg = d3.select('body')
+		  .append('svg')
+		  .attr('width', width)
+		  .attr('height', height)
+		  .call(zoom);
+
+		g = svg.append('g');
+
+		g.selectAll('path')
+		  .data(rewound.features)
+		  .enter()
+		  .append('path')
+		  .attr('fill', '#ccc')
+		  .attr('d', geoPath);
+
+        simulation = d3.forceSimulation()
+            .velocityDecay(1.0)
+            .force("y", d3.forceY().strength(.1))
+            .force("x", d3.forceX().strength(.1))
+            .force('charge', d3.forceManyBody().strength(-150))
+            .alphaTarget(.15)
+            .on('tick', ticked);
+
+        circles = g
+            .selectAll("circle");
+
+        
+     }
+        
+        function ticked() {
+            circles
+                .attr("cx", function(d) { return d.x; })
+                .attr("cy", function(d) { return d.y; });
+        }  
+
+	function clustering(alpha) {
+	    filtered_students.forEach(function(d) {
+	      var x = d.x - get_projection(d.building.location)[0],
+		  y = d.y - get_projection(d.building.location)[1],
+		  l = Math.sqrt(x * x + y * y),
+		  r = cradius + 1;
+	      if (l !== r) {
+		l = (l - r) / l * alpha;
+		d.x -= x *= l;
+		d.y -= y *= l;
+	      }  
+	    });
+	}
+
+	function collide(alpha) {
+	  var quadtree = d3.quadtree()
+	      .x((d) => d.x)
+	      .y((d) => d.y)
+	      .addAll(filtered_students);
+
+	  filtered_students.forEach(function(d) {
+	    var r = cradius + cpadding,
+		nx1 = d.x - r,
+		nx2 = d.x + r,
+		ny1 = d.y - r,
+		ny2 = d.y + r;
+	    quadtree.visit(function(quad, x1, y1, x2, y2) {
+
+	      if (quad.data && (quad.data !== d)) {
+		var x = d.x - quad.data.x,
+		    y = d.y - quad.data.y,
+		    l = Math.sqrt(x * x + y * y),
+		    r = cradius + cradius + cpadding;
+		if (l < r) {
+		  l = (l - r) / l * alpha;
+		  d.x -= x *= l;
+		  d.y -= y *= l;
+		  quad.data.x += x;
+		  quad.data.y += y;
+		}
+	      }
+	      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+	    });
+	  });
+	}
+
+     function zoomed()
+     {
+       g.attr('transform', d3.event.transform);
+     }
+
+
+     function get_projection(location) {
+	   js_geo = [location[1], location[0]];
+	   projection = albersProjection(js_geo);
+           return projection;
+     }    
+     function placeStudents(){
+        filtered_students = schedules.slots.filter( function (d) { return d.dow == current_dow && d.start_time == current_hour; } );
+        var t = d3.transition()
+          .duration(750);
+
+        circles = circles
+            .data(filtered_students, function(d) { 
+                                         return d ? d.student_id : this.student_id; } );
+        circles.exit()
+               .style("fill", "#b26745")
+               .transition(t)
+                 .attr('r', 1e-6)
+                 .remove();
+ 
+        circles
+            .attr("class", "updated");
+
+        circles = circles
+            .enter().append("circle")
+            .attr('class', 'nodes')
+            .merge(circles)
+            .attr("id", function(d) { return d.student_id; } )
+            .attr('data-dow', function(d) { return d.dow; })
+            .attr('data-start_time', function (d) { return d.start_time; })
+            .attr("r", function(d){  return cradius; })
+            ;
+       circles
+           .attr('cx', function (d) {
+               projection = get_projection(d.building.location);
+               return projection[0];
+               })
+           .attr('cy', function (d) {
+               projection = get_projection(d.building.location);
+               return projection[1];
+               });
+
+          
+       simulation.nodes(filtered_students)
+            .force("collide",collide)
+            .force("cluster",clustering);
+
+     }
+
+
+     d3.queue()
+       .defer(d3.json, 'data/rewound.json')
+       .defer(d3.json, 'data/mock_schedules.json')
+       .await(setup);
+
+     function setup(error, input_buildings, input_schedules){
+       rewound = input_buildings;
+       schedules = input_schedules;
+       initMap();
+       placeStudents();
+     $('#dow_slider').on('change', function() {
+          if (this.checked) {
+             current_dow = 'tth';
+          } else {
+             current_dow = 'mwf';
+          }
+          $('#dow_label').text(current_dow);
+          placeStudents();
+      });
+	var rangeSlider = function(){
+	  var slider = $('.range-slider'),
+	      range = $('.range-slider__range'),
+	      value = $('.range-slider__value');
+	    
+	  slider.each(function(){
+
+	    value.each(function(){
+	      var value = $(this).prev().attr('value');
+	      $(this).html(value);
+	    });
+
+	    range.on('input', function(){
+	      $(this).next(value).html(this.value);
+	    });
+	  });
+	};
+
+	rangeSlider();
+
+     $('#hour_slider').on('change', function() {
+           current_hour = $(this).val();
+           placeStudents();
+        });
+     }
+   
+    
+  </script>
+</head>
+<body>
+<div class='control_container'>
+	<label class="switch">
+	  <input id='dow_slider' type="checkbox">
+	  <span class="slider round"></span>
+	</label>
+         <div id='dow_label'> mwf </div>
+<div class="range-slider">
+  <input id='hour_slider' class="range-slider__range" type="range" value="10" min="8" max="18">
+  <span id='hour_slider_span' class="range-slider__value">0</span>
+</div>
+</div>
+</body>
+</html>

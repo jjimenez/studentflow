@@ -1,0 +1,27 @@
+<html>
+<head>
+  <title>A D3 map</title>
+  <script src='https://d3js.org/d3.v4.min.js'></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+	  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	  crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" href="css/styles.css" />
+  <link rel="stylesheet" type="text/css" href="css/slider.css" />
+  <link rel="stylesheet" type="text/css" href="css/range_slider.css" />
+  <script src='script/main.js'> </script>
+  <script src='script/range_slider.js'> </script>
+</head>
+<body>
+<div class='control_container'>
+	<label class="switch">
+	  <input id='dow_slider' type="checkbox">
+	  <span class="slider round"></span>
+	</label>
+         <div id='dow_label'> mwf </div>
+<div class="range-slider">
+  <input id='hour_slider' class="range-slider__range" type="range" value="8" min="8" max="18">
+  <span id='hour_slider_span' class="range-slider__value">0</span>
+</div>
+</div>
+</body>
+</html>

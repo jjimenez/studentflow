@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>StudentFlow:Simple</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+
+      var map;
+      var NH = { lat: 41.6660483, lng: -91.5363531};
+      var JH = { lat: 41.6619039, lng: -91.5365052};
+      //setup map to center on the Pentacrest
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15,
+          center: {lat: 41.661872, lng: -91.5356997}
+        });
+
+        map.data.loadGeoJson('data/rewound.json');
+
+        var NHCircle = new google.maps.Circle({
+	     strokeColor: '#FF0000',
+	     strokeOpacity: 0.8,
+	     strokeWeight: 2,
+	     fillColor: '#FF0000',
+	     fillOpacity: 0.65,
+	     map: map,
+	     center: NH,
+	     radius: 25
+	   });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjmbhaFCidl1hW6Ni7Gamgm6XwCtc6R9E&callback=initMap">
+    </script>
+    <script defer>
+      buildings = {"RIV8":["108 River Street","352"],"FS01":["110 East Bloomington Street","56"],"SCST":["118 South Clinton Street","362"],"TNSW":["2100 James Street","387"],"WCOR":["401 Westcor Drive","484"],"ACL":["Academic Center and Library","572"],"ACT":["Activities Center","569"],"AJB":["Adler Journalism and Mass Communication Building","456"],"ASB":["Advancement Services Building","478"],"AACC":["Afro-American Cultural Center","200"],"AB":["Art Building","21"],"ABW":["Art Building West","37"],"APAC":["Asian Pacific American Cultural Center","47"],"AWC-B2":["Aspire Building B2","166"],"BCSB":["Becker Communication Studies Building","376"],"BBH":["Beckwith Boathouse","396"],"BB":["Biology Building","18"],"BBE":["Biology Building East","448"],"BRSF":["Biomedical Research Support Facility","245"],"BHC":["Blank Honors Center","454"],"BHS":["Bloomington House","310"],"BSB":["Bowen Science Building","204"],"BH":["Bowman House","404"],"BLB":["Boyd Law Building","377"],"BT":["Boyd Tower","343"],"B":["Burge Hall","73"],"CALH":["Calvin Hall","7"],"CMF":["Cambus Maintenance Facility","342"],"CRWC":["Campus Recreation and Wellness Center","68"],"CGH":["Cannon-Gay House","462"],"CBRB":["Carver Biomedical Research Building","455"],"RCP":["Carver Pavilion","359"],"CHA":["Carver-Hawkeye Arena","374"],"CAT":["Catlett Residence Hall","272"],"CA":["Caywood Apartments","174"],"CDD":["Center for Disabilities and Development","118"],"CB":["Chemistry Building","3"],"SFCH":["Children\u0026#039;s Hospital","400"],"CWP":["Chilled Water Plant 1","314"],"CWP2":["Chilled Water Plant 2 (West)","308"],"CLSB":["Clinton Street Building","379"],"CMAB":["College of Medicine Administration Building","425"],"CPHB":["College of Public Health Building","75"],"JCP":["Colloton Pavilion","375"],"CC":["Communications Center","16"],"CEF":["Continuing Education Facility","466"],"C":["Currier Hall","44"],"DC":["Danforth Chapel","48"],"D":["Daum Hall","276"],"DSB":["Dental Science Building","278"],"DH":["Dey House","134"],"BASE":["Duane Banks Field","128"],"DNHS":["Dubuque North House","271"],"DHS":["Dubuque South House","311"],"EMRB":["Eckstein Medical Research Building","401"],"EPF1":["Emergency Power Facility 1","212"],"ERF":["Engineering Research Facility","407"],"EPB":["English-Philosophy Building","196"],"EHS":["Environmental Health and Safety Office","85"],"EHS2":["Environmental Health and Safety Office No. 2","76"],"EHS3":["Environmental Health and Safety Office No. 3","77"],"EHS4":["Environmental Health and Safety Office No. 4","176"],"EMF":["Environmental Management Facility","241"],"FG":["Facilities Garage","581"],"KFAB":["Fenton Administration Building","565"],"FHE":["Fenton Hall East","567"],"FHFG":["Fenton Hall Facilities Garage","582"],"FHW":["Fenton Hall West","568"],"FHEM":["Field Hockey Event Management Box","286"],"FHG":["Field Hockey Grandstand","287"],"FH":["Field House","40"],"FGCH":["Finkbine Golf Club House","187"],"FMB":["Finkbine Maintenance Building","337"],"FSF":["Finkbine Shop Facility","338"],"FS":["Fleet Services","267"],"GH":["General Hospital","31"],"GALC":["Gerdin Athletic Learning Center","13"],"GILH":["Gilmore Hall","38"],"GSL":["Glenn Schaeffer Library","140"],"HH":["Halsey Hall","15"],"HA":["Hancher Auditorium","120"],"HFPC":["Hansen Football Performance Center","395"],"HLHS":["Hardin Library for Health Sciences","293"],"HDA":["Hawkeye Drive Apartments","162"],"HOSC":["Hawkeye Oral Surgery Clinic","71"],"HRSB":["Hawkeye Recreation Service Building","444"],"HTRC":["Hawkeye Tennis and Recreation Complex","457"],"HSSB":["Health Care Support Services Building","298"],"H":["Hillcrest Hall","112"],"HFGC":["Hoak Family Golf Complex","186"],"HCB":["Honors Centerstone Building","313"],"HOPE":["Hope Lodge","389"],"HPR1":["Hospital Parking Ramp 1","220"],"HPR2":["Hospital Parking Ramp 2","403"],"HPR3":["Hospital Parking Ramp 3","412"],"HA1":["Hydraulics Annex 1","373"],"HA2":["Hydraulics Annex 2","440"],"HLEA":["Hydraulics East Annex","358"],"HLMA":["Hydraulics Model Annex","381"],"HWBF":["Hydraulics Wave Basin Facility","420"],"HWTA":["Hydraulics Wind Tunnel Annex","393"],"IRA":["Independence Road Annex","266"],"ITF":["Information Technology Facility","290"],"IREH":["Institute for Rural and Environmental Health","213"],"IPA":["Institute of Public Affairs","53"],"IATL":["Iowa Advanced Technology Laboratories","418"],"OIGS":["Iowa Geological Survey - Oakdale","370"],"IMU":["Iowa Memorial Union","46"],"IMUR":["Iowa Memorial Union Parking Ramp","183"],"IRL":["Iowa River Landing","190"],"JSL":["James Street Laboratory","59"],"JB":["Jefferson Building","300"],"JH":["Jessup Hall","4"],"KHF":["Karro Athletic Hall of Fame","446"],"KS":["Kinnick Stadium","42"],"KRC":["Kirkwood Regional Center","489"],"KH":["Kuhl House","369"],"LSHS":["Lagoon Shelter House","60"],"LSC":["Landscape Services Complex","132"],"LNAC":["Latino-Native American Cultural Center","155"],"L":["Laundry","441"],"LB":["Laundry Building (Old)","54"],"LFR":["Law Faculty Research","307"],"LHPD":["Law, Health Policy and Disability Center","437"],"LHL":["Legacy Hall","573"],"LGBT":["Lesbian, Gay, Bisexual, Transgender Resource Center","460"],"LCUA":["Levitt Center for University Advancement","434"],"LS":["Liberty Square","485"],"LC":["Lindquist Center","316"],"LSP":["Linn Street Place","279"],"MH":["Macbride Hall","8"],"MLH":["MacLean Hall","23"],"MSSB":["Madison Street Services Building","160"],"LIB":["Main Library","136"],"M":["Mayflower Hall","391"],"MEB":["Medical Education Building","34"],"MERF":["Medical Education Research Facility","447"],"ML":["Medical Laboratories","28"],"MRC":["Medical Research Center","64"],"MRF":["Medical Research Facility","182"],"MAPF":["Melrose Avenue Parking Facility - Hospital Parking Ramp 4","433"],"MBSB":["Mossman Business Services Building","436"],"MTF":["Multi-Tenant Facility","435"],"MTP4":["Myriad Technology Plaza Four","67"],"MTP1":["Myriad Technology Plaza One","57"],"MTP2":["Myriad Technology Plaza Two","69"],"NADS":["National Advanced Driving Simulator Building","439"],"NRP":["Newton Road Ramp","443"],"NCP":["North Campus Parking and Chilled Water Facility","422"],"NH":["North Hall","35"],"CNB":["Nursing Building","322"],"OBGH":["Oakdale Biology Greenhouse","413"],"ORF":["Oakdale Research Facilities","305"],"OSBA":["Oakdale Shops Building A","242"],"STUA":["Oakdale Studio A","230"],"OPP":["Oakdale Utility Power Plant","239"],"OUWH":["Oakdale Well House","252"],"CHST":["Obermann Center ","55"],"OC":["Old Capitol","1"],"OMA":["Old Museum of Art","222"],"PBDB":["Pappajohn Biomedical Discovery Building","25"],"PBB":["Pappajohn Business Building","430"],"PEC":["Pappajohn Education Center","482"],"JPP":["Pappajohn Pavilion","421"],"PARK":["Parklawn Hall","121"],"SS":["Pearl Softball Field","449"],"CMO1":["Pediatric Associates - Coralville Building 1","631"],"CMO2":["Pediatric Associates - Coralville Building 2","632"],"PAIC":["Pediatric Associates - Iowa City","630"],"P":["Petersen Residence Hall","275"],"PHAR":["Pharmacy Building","6"],"PH":["Phillips Hall","184"],"PRL":["Physiology Research Laboratory","330"],"PCO":["Plaza Centre One","465"],"PC":["Pomerantz Center","458"],"PFP":["Pomerantz Family Pavilion","431"],"PP":["Power Plant","52"],"PR":["Presidents Residence","39"],"BWCC":["Rainbow Day Care","156"],"RB":["Recreation Building","304"],"RPLS":["Research Park Landscape Service","382"],"R":["Rienow Hall","273"],"RMCD":["Ronald McDonald House","496"],"SRSB":["Sand Road Service Building","157"],"SH":["Schaeffer Hall","2"],"SL":["Sciences Library","19"],"SC":["Seamans Center","22"],"SSH":["Seashore Hall","11"],"SHSE":["Shambaugh House","123"],"SRF":["Shipping and Receiving Facility","410"],"S":["Slater Hall","274"],"SEMB":["Soccer Event Management Box","288"],"SQ":["South Quad","115"],"SW":["South Wing","181"],"SLP":["Spence Labs","188"],"OSMR":["Sports Medicine Clinic","289"],"STAN":["Stanley Hall","277"],"SHL":["Stanley Hydraulics Laboratory","24"],"SHSB":["State Historical Society Building","497"],"HLI":["State Hygienic Laboratory","26"],"STH":["Stuit Hall","20"],"TIC":["Technology Innovation Center","227"],"TB":["Theatre Building","50"],"TH":["Trowbridge Hall","29"],"BVC":["UI Bioventures Center","63"],"NLPS":["UI Childrens Hospital Pediatrics - North Liberty","624"],"UCC":["University Capitol Centre","72"],"UAC":["University Club","161"],"USB":["University Services Building","450"],"VAN":["Van Allen Hall","203"],"VAB":["Visual Arts Building","90"],"VS":["Volatile Storage","147"],"VOX":["Voxman Music Building","125"],"WP":["Water Plant","185"],"INRC":["Waterman Iowa Nonprofit Resource Center","195"],"WHL":["Wells Hall","566"],"SHC":["Wendell Johnson Speech and Hearing Center","198"],"WCSP":["West Campus Steam Plant","346"],"WCTC":["West Campus Transportation Center","318"],"WL":["Westlawn","33"]}
+    </script>
+  </body>
+</html>

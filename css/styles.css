@@ -1,0 +1,19 @@
+    	svg { 
+          border: 1px solid blue;
+        }
+        .nodes {
+          fill: blue;
+        }
+        #student1 {
+          fill: green;
+          r: 12;
+        }
+        .updated {
+          fill: red;
+        }
+        .control_container {
+          width: 45%;
+        }
+        #dow_label {
+          text-transform: uppercase;
+        }
