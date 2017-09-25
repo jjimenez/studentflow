@@ -12,6 +12,8 @@ var simulation;
 var current_hour = 8;
 var current_dow = 'mwf';
 var animate = 1;
+var animation_interval = 5000;
+var velocity_decay = 1.0;
 
 var max_hour = 18;
 
@@ -47,7 +49,7 @@ function initMap() {
     .attr('d', geoPath);
 
   simulation = d3.forceSimulation()
-    .velocityDecay(1.0)
+    .velocityDecay(velocity_decay)
     .force("y", d3.forceY().strength(.1))
     .force("x", d3.forceX().strength(.1))
     .force('charge', d3.forceManyBody().strength(-150))
@@ -248,5 +250,5 @@ d3.queue()
         //      console.log(current_dow + ':' + current_hour.toString());
       }
       //console.log('current_dow: ' + current_dow + ' current_hour: ' + current_hour.toString());
-    }, 1500);
+    }, animation_interval);
   }
