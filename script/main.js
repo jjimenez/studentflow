@@ -230,12 +230,12 @@ d3.queue()
         if (current_hour == max_hour) {
           //           console.log('wrapping at end of day');
           if (current_dow == 'mwf') {
-            current_dow = 'tth';
             $('#dow_slider').prop('checked', true);
+            current_dow = 'tth';
             $('#dow_label').text('tth');
           } else {
-            current_dow == 'mwf';
             $('#dow_slider').prop('checked', false);
+            current_dow ='mwf';
             $('#dow_label').text('mwf');
           }
           current_hour = 8;
@@ -247,5 +247,6 @@ d3.queue()
         $('#hour_slider_span').text(current_hour);
         //      console.log(current_dow + ':' + current_hour.toString());
       }
+      //console.log('current_dow: ' + current_dow + ' current_hour: ' + current_hour.toString());
     }, 1500);
   }
